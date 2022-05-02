@@ -42,7 +42,6 @@ public class StudentRepositoryImpl implements StudentRepository {
     @Override
     public void modify(Student student) {
         Student dbStudent = getStudent(student.getId());
-        //Todo exception
 
         dbStudent.setName(student.getName());
         dbStudent.setEmail(student.getEmail());

@@ -15,7 +15,7 @@ public class StudentModifierRequest {
     @Email
     String email;
 
-    @Min(0)
+    @Min(-1) // Todo: for mask
     @Max(100)
     int score;
 
