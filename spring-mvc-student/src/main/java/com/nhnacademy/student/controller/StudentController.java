@@ -3,15 +3,22 @@ package com.nhnacademy.student.controller;
 import com.nhnacademy.student.domain.Student;
 import com.nhnacademy.student.domain.StudentModifierRequest;
 import com.nhnacademy.student.exception.StudentNotFoundException;
+import com.nhnacademy.student.exception.ValidationFailedException;
 import com.nhnacademy.student.repository.StudentRepository;
+import com.nhnacademy.student.validator.StudentModifierRequestValidator;
+import com.nhnacademy.student.validator.StudentRegisterRequestValidator;
 import java.util.Map;
 import java.util.Objects;
+import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,8 +30,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class StudentController {
     private final StudentRepository studentRepository;
 
-    public StudentController(StudentRepository studentRepository) {
+    private final StudentModifierRequestValidator validator;
+
+    public StudentController(StudentRepository studentRepository, StudentModifierRequestValidator validator) {
         this.studentRepository = studentRepository;
+        this.validator = validator;
     }
 
     @ModelAttribute("student")
@@ -43,6 +53,11 @@ public class StudentController {
         return "studentView";
     }
 
+//    @GetMapping(value = "/{studentId}", params = "hideScore")
+//    public String hideScoreConvert() {
+//        return "studentView";
+//    }
+
     @GetMapping("/{studentId}/modify")
     public String studentModifyForm(@ModelAttribute("student") Student student,
                                     Model model) {
@@ -52,8 +67,13 @@ public class StudentController {
 
     @PostMapping("/{studentId}/modify")
     public String modifyUser(@ModelAttribute Student student,
-                             @ModelAttribute StudentModifierRequest studentRequest,
+                             @Valid @ModelAttribute StudentModifierRequest studentRequest,
+                             BindingResult bindingResult,
                              Map<String, Student> map) {
+
+        if (bindingResult.hasErrors()) {
+            throw new ValidationFailedException(bindingResult);
+        }
 
         student.setName(studentRequest.getName());
         student.setEmail(studentRequest.getEmail());
@@ -73,4 +93,8 @@ public class StudentController {
         return "error";
     }
 
+    @InitBinder("studentModifierRequest")
+    protected void initBinder(WebDataBinder binder) {
+        binder.addValidators(validator);
+    }
 }
