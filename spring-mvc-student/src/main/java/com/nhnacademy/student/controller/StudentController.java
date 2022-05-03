@@ -37,6 +37,8 @@ public class StudentController {
         this.validator = validator;
     }
 
+    // @ModelAttribute가 메서드에 명시되어 있어서
+    // 다른 메서드들이 실행되기전에 가장 먼저 실행되는 메서드
     @ModelAttribute("student")
     public Student getStudent(@PathVariable("studentId") long studentId) {
         Student student = studentRepository.getStudent(studentId);
@@ -45,6 +47,8 @@ public class StudentController {
         }
         return student;
     }
+    // 여기서 return 하는 student값이 student라는 ModelAttribute로
+    // 저장되고 다른 메서드들이 참조할 수 있음
 
     @GetMapping("/{studentId}")
     public String viewStudent(@ModelAttribute("student") Student student, ModelMap modelMap) {
@@ -66,8 +70,9 @@ public class StudentController {
         return "studentModify";
     }
 
+    // binding = false 해주면 ModelAttribute가 사용자 입력을 받지 않음
     @PostMapping("/{studentId}/modify")
-    public String modifyUser(@ModelAttribute Student student,
+    public String modifyUser(@ModelAttribute(value = "student", binding = false) Student student,
                              @Valid @ModelAttribute StudentModifierRequest studentRequest,
                              BindingResult bindingResult,
                              Map<String, Student> map) {
