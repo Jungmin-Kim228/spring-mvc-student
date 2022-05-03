@@ -53,7 +53,6 @@ public class StudentController {
         return "studentView";
     }
 
-    // Todo: question how to get yes or no
     @GetMapping(value = "/{studentId}", params = "hideScore=yes")
     public String hideScoreConvert(@ModelAttribute Student student, Model model) {
         model.addAttribute("student", Student.constructMaskedStudent(student));

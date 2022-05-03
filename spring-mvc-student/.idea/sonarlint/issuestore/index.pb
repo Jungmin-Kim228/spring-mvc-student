@@ -25,5 +25,3 @@ Ssrc/main/java/com/nhnacademy/student/validator/StudentRegisterRequestValidator.
 Ssrc/main/java/com/nhnacademy/student/validator/StudentModifierRequestValidator.java,e\3\e369ad5af24faa446b70526575fff2986d88fe8f
 }
 Msrc/main/java/com/nhnacademy/student/exception/ValidationFailedException.java,0\3\03e21c77fc9b97abfca5a7b45567df4df58bb5a1
-v
-Fsrc/main/java/com/nhnacademy/student/controller/StudentController.java,e\d\ed0ef099dfac9b78d2cc2beb44d7a9e4a12288a6
